@@ -1,0 +1,24 @@
+# Run MailBatch directly from the project folder URL (http://localhost/mailbatch).
+# Needs Apache mod_rewrite and AllowOverride All (default in XAMPP). For production you should still
+# point the web root at /public when your host allows it.
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Authorization header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # already rewritten into /public: stop here
+    RewriteRule ^public/ - [L]
+    RewriteRule ^index\.php$ - [L]
+
+    # static files that live in /public
+    RewriteRule ^(assets/.+|favicon\.ico|robots\.txt)$ public/$1 [L]
+
+    # everything else (including /.env, /storage, /vendor ...) goes to Laravel, which answers 404
+    RewriteRule ^ index.php [L]
+</IfModule>

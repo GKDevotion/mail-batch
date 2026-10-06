@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" role="img" aria-label="MailBatch">
+  <defs>
+    <linearGradient id="mbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6f5bff"/>
+      <stop offset="1" stop-color="#ff5fa2"/>
+    </linearGradient>
+  </defs>
+  <rect width="40" height="40" rx="11" fill="url(#mbg)"/>
+  <rect x="13" y="8.5" width="20" height="3.2" rx="1.6" fill="#fff" opacity=".45"/>
+  <rect x="10.5" y="12.8" width="24" height="3.2" rx="1.6" fill="#fff" opacity=".7"/>
+  <rect x="8" y="17" width="24" height="16" rx="3.2" fill="#fff"/>
+  <path d="M9.6 19.4 20 26.6l10.4-7.2" fill="none" stroke="url(#mbg)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

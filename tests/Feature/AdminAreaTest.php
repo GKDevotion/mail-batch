@@ -19,13 +19,14 @@ class AdminAreaTest extends TestCase
 
     public function test_only_admins_can_open_the_admin_area(): void
     {
+        $this->get(route('admin.dashboard'))->assertRedirect('/login');   // guest first: actingAs() persists for the rest of the test
+
         $user = User::factory()->create();
 
         foreach (['admin.dashboard', 'admin.users.index', 'admin.smtp.index', 'admin.campaigns.index', 'admin.logs.index', 'admin.logs.failed', 'admin.settings.edit'] as $route) {
             $this->actingAs($user)->get(route($route))->assertForbidden();
         }
 
-        $this->get(route('admin.dashboard'))->assertRedirect('/login');
         $this->actingAs(User::factory()->admin()->create())->get(route('admin.dashboard'))->assertOk()->assertSee('Administration');
     }
 

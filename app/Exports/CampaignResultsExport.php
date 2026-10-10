@@ -44,7 +44,7 @@ class CampaignResultsExport extends StringValueBinder implements FromQuery, With
         }
     }
 
-    public function query()
+    public function query(): \Illuminate\Database\Eloquent\Builder
     {
         return CampaignRecipient::query()->where('campaign_id', $this->campaign->id)->orderBy('row_number');
     }

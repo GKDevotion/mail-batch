@@ -74,16 +74,26 @@
                             <i class="bi bi-hdd-network"></i><span class="mb-label">SMTP accounts</span>
                         </a>
 
+                        @foreach (app(\App\Support\Modules\MenuRegistry::class)->sections($authUser, 'main') as $moduleSection => $moduleItems)
+                            <div class="mb-section-title">{{ $moduleSection }}</div>
+                            @foreach ($moduleItems as $moduleItem)
+                                <a class="mb-link {{ $moduleItem['active'] ? 'active' : '' }}" href="{{ $moduleItem['url'] }}" title="{{ $moduleItem['label'] }}">
+                                    <i class="bi bi-{{ $moduleItem['icon'] }}"></i><span class="mb-label">{{ $moduleItem['label'] }}</span>
+                                </a>
+                            @endforeach
+                        @endforeach
+
                         <div class="mb-section-title">Settings</div>
                         <a class="mb-link {{ request()->routeIs('account.*') ? 'active' : '' }}" href="{{ route('account.edit') }}" title="Account">
                             <i class="bi bi-person-gear"></i><span class="mb-label">Account</span>
                         </a>
 
-                        @if ($authUser->isAdmin())
+                        @php($moduleAdmin = app(\App\Support\Modules\MenuRegistry::class)->items($authUser, 'admin'))
+                        @if ($authUser->isAdmin() || count($moduleAdmin))
                             <div class="mb-section-title">Administration</div>
                             <div class="mb-group">
                                 <div class="mb-link-row">
-                                    <a class="mb-link {{ $adminOpen ? 'active-soft' : '' }}" href="{{ route('admin.dashboard') }}" title="Admin">
+                                    <a class="mb-link {{ $adminOpen ? 'active-soft' : '' }}" href="{{ $authUser->isAdmin() ? route('admin.dashboard') : $moduleAdmin[0]['url'] }}" title="Admin">
                                         <i class="bi bi-shield-lock"></i><span class="mb-label">Admin</span>
                                     </a>
                                     <button class="mb-toggle mb-chevron" type="button" data-bs-toggle="collapse" data-bs-target="#adminMenu"
@@ -92,6 +102,7 @@
                                     </button>
                                 </div>
                                 <div class="collapse mb-sub {{ $adminOpen ? 'show' : '' }}" id="adminMenu">
+                                    @if ($authUser->isAdmin())
                                     @foreach ([
                                         ['admin.dashboard', 'admin.dashboard', 'Overview'],
                                         ['admin.users.index', 'admin.users.*', 'Users'],
@@ -102,6 +113,10 @@
                                         ['admin.settings.edit', 'admin.settings.*', 'Settings'],
                                     ] as [$route, $pattern, $label])
                                         <a class="{{ request()->routeIs($pattern) ? 'active' : '' }}" href="{{ route($route) }}">{{ $label }}</a>
+                                    @endforeach
+                                    @endif
+                                    @foreach ($moduleAdmin as $moduleItem)
+                                        <a class="{{ $moduleItem['active'] ? 'active' : '' }}" href="{{ $moduleItem['url'] }}">{{ $moduleItem['label'] }}</a>
                                     @endforeach
                                 </div>
                             </div>

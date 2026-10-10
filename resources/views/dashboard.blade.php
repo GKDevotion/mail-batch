@@ -58,4 +58,6 @@
         </div>
         @include('campaigns.partials.table', ['campaigns' => $recentCampaigns, 'compact' => true])
     </div>
+
+    @include('modules.partials.dashboard-widgets')
 @endsection

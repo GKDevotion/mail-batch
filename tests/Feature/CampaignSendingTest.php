@@ -171,7 +171,7 @@ class CampaignSendingTest extends TestCase
         $this->assertStringNotContainsString('550 no such user', $r->error_message);
         $this->assertSame(1, $r->retry_count);
         $this->assertDatabaseHas('email_logs', ['recipient_id' => $r->id, 'status' => 'failed']);
-        $this->assertSame(CampaignStatus::Processing, $c->fresh()->status);
+        $this->assertSame(CampaignStatus::Completed, $c->fresh()->status);   // nothing pending is left
     }
 
     public function test_smtp_auth_failure_pauses_campaign_without_burning_retries(): void
@@ -318,7 +318,7 @@ class CampaignSendingTest extends TestCase
 
     public function test_confirm_page_and_status_endpoint(): void
     {
-        [$user, $c] = $this->scenario(3, ['status' => CampaignStatus::Ready]);
+        [$user, $c] = $this->scenario(3, ['status' => CampaignStatus::Ready, 'excel_path' => 'mailbatch/uploads/test.xlsx']);
 
         $this->actingAs($user)->get(route('campaigns.confirm', $c))->assertOk()->assertSee('Start sending');
         $this->actingAs($user)->getJson(route('campaigns.progress.status', $c))
